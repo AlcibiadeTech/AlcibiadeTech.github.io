@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alcibiade Protocol</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="./Alcibiade Protocol_files/css2" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -815,45 +813,236 @@
             display: none;
         }
     </style>
-</head>
-<body>
+<style>
+      .text-corrector-circle {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        background-color: #2563EB;
+        border-radius: 50%;
+        z-index: 2147483647;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        opacity: 0.6;
+        transform: translate(12px, 6px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .text-corrector-circle.dragging {
+        transform: scale(1.1);
+        background-color: #1D4ED8;
+        opacity: 1;
+      }
+
+      .text-corrector-circle::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72'/%3E%3Cpath d='m14 7 3 3'/%3E%3Cpath d='M5 6v4'/%3E%3Cpath d='M19 14v4'/%3E%3Cpath d='M10 2v2'/%3E%3Cpath d='M7 8H3'/%3E%3Cpath d='M21 16h-4'/%3E%3Cpath d='M11 3H9'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        opacity: 0;
+        transition: all 0.2s ease;
+      }
+
+      .text-corrector-hover-area {
+        position: fixed;
+        width: 20px;
+        height: 20px;
+        z-index: 2147483647;
+        cursor: pointer;
+        pointer-events: all !important;
+      }
+
+      .text-corrector-hover-area:hover .text-corrector-circle {
+        width: 20px;
+        height: 20px;
+        transform: scale(1.2) translate(0, 0);
+        background-color: #1D4ED8;
+        opacity: 1;
+      }
+
+      .text-corrector-hover-area:hover .text-corrector-circle::before {
+        width: 14px;
+        height: 14px;
+        opacity: 0.95;
+      }
+
+      .text-corrector-circle.small-width {
+        transform: translate(50%, 50%);
+      }
+
+      .text-corrector-hover-area:hover .text-corrector-circle.small-width {
+        transform: translate(calc(50% - 10px), calc(50% - 10px));
+      }
+
+      .text-corrector-popup {
+        position: fixed;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+        z-index: 2147483647;
+        font-family: system-ui, -apple-system, sans-serif;
+        font-size: 14px;
+        min-width: 280px;
+        max-width: 360px;
+        animation: text-corrector-fadein 0.15s ease-out;
+      }
+
+      @keyframes text-corrector-fadein {
+        from { opacity: 0; transform: scale(0.98); }
+        to { opacity: 1; transform: scale(1); }
+      }
+
+      .text-corrector-popup-header-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      /* Bigger, more visible Close button */
+      .text-corrector-popup-close-btn {
+        margin-left: auto;
+        background: transparent;
+        border: none;
+        width: 28px;
+        height: 28px;
+        font-size: 20px;
+        cursor: pointer;
+        color: #6b7280;
+        transition: color 0.2s ease, background-color 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+      }
+      .text-corrector-popup-close-btn:hover {
+        color: #111827;
+        background-color: #f3f4f6;
+      }
+
+      .text-corrector-popup-icon {
+        width: 24px;
+        height: 24px;
+        background-color: #2563EB;
+        border-radius: 50%;
+        position: relative;
+      }
+
+      .text-corrector-popup-icon::before {
+        content: '';
+        width: 14px;
+        height: 14px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72'/%3E%3Cpath d='m14 7 3 3'/%3E%3Cpath d='M5 6v4'/%3E%3Cpath d='M19 14v4'/%3E%3Cpath d='M10 2v2'/%3E%3Cpath d='M7 8H3'/%3E%3Cpath d='M21 16h-4'/%3E%3Cpath d='M11 3H9'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        opacity: 0.95;
+      }
+
+      .text-corrector-popup-header {
+        font-size: 16px;
+        font-weight: 600;
+        color: #111827;
+      }
+
+      .text-corrector-popup-subtext {
+        color: #6B7280;
+        margin-bottom: 20px;
+        line-height: 1.5;
+      }
+
+      .text-corrector-popup-buttons {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .text-corrector-popup-button {
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
+        background: white;
+        color: #374151;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        text-align: center;
+      }
+
+      .text-corrector-popup-button:hover {
+        background: #F3F4F6;
+      }
+
+      .text-corrector-popup-button.keep-button {
+        background: #F3F4F6;
+      }
+      .text-corrector-popup-button.hide-tab-button {
+        background: white;
+      }
+      .text-corrector-popup-button.disable-button {
+        background: #EF4444;
+        border-color: #EF4444;
+        color: white;
+      }
+      .text-corrector-popup-button.disable-button:hover {
+        background: #DC2626;
+      }
+    </style></head>
+<body data-new-gr-c-s-check-loaded="14.1267.0" data-gr-ext-installed="">
     <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
         <defs>
             <filter id="liquid-glass-distortion" x="-50%" y="-50%" width="200%" height="200%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.01 0.01" numOctaves="2" seed="2" result="turbulence"/>
-                <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="8" xChannelSelector="R" yChannelSelector="G" result="displacement"/>
-                <feGaussianBlur in="displacement" stdDeviation="0.5" result="blur"/>
+                <feturbulence type="fractalNoise" baseFrequency="0.01 0.01" numOctaves="2" seed="2" result="turbulence"></feturbulence>
+                <fedisplacementmap in="SourceGraphic" in2="turbulence" scale="8" xChannelSelector="R" yChannelSelector="G" result="displacement"></fedisplacementmap>
+                <fegaussianblur in="displacement" stdDeviation="0.5" result="blur"></fegaussianblur>
             </filter>
             <filter id="liquid-glow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>
-                <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="glow"/>
-                <feBlend in="SourceGraphic" in2="glow" mode="normal"/>
+                <fegaussianblur in="SourceGraphic" stdDeviation="10" result="blur"></fegaussianblur>
+                <fecolormatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="glow"></fecolormatrix>
+                <feblend in="SourceGraphic" in2="glow" mode="normal"></feblend>
             </filter>
         </defs>
     </svg>
     
     <div class="language-selector">
         <div class="lang-toggle">
-            <button class="lang-btn" data-lang="fr">FR</button>
+            <button class="lang-btn active" data-lang="fr">FR</button>
             <button class="lang-btn" data-lang="en">EN</button>
         </div>
     </div>
     
     <div id="canvas-container">
-        <canvas id="particle-canvas"></canvas>
+        <canvas id="particle-canvas" width="1365" height="993"></canvas>
     </div>
 
     <div class="social-links">
-        <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+        <a href="https://instagram.com/" target="_blank" aria-label="Instagram">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                 <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
             </svg>
         </a>
-        <a href="https://discord.com" target="_blank" aria-label="Discord">
+        <a href="https://discord.com/" target="_blank" aria-label="Discord">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"></path>
             </svg>
         </a>
     </div>
@@ -867,7 +1056,7 @@
         <section class="hero">
             <div class="logo">
                 <div class="logo-shape"></div>
-                <img src="logo.png" alt="Logo" class="logo-img">
+                <img src="./Alcibiade Protocol_files/logo.png" alt="Logo" class="logo-img">
             </div>
             <h1>Alcibiade Protocol</h1>
             <div class="tagline lang-fr">Protocoles personnalisés contre la fatigue et pour la performance !</div>
@@ -910,47 +1099,47 @@
 
         <section class="techs-section">
             <h2>
-                <span class="lang-fr">Nos Technologies</span>
+                <span class="lang-fr">Nos Protocoles génériques</span>
                 <span class="lang-en">Our Techs</span>
             </h2>
             <div class="carousel-container">
                 <button class="carousel-nav prev" aria-label="Previous">
                     <svg viewBox="0 0 24 24">
-                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
                     </svg>
                 </button>
                 <button class="carousel-nav next" aria-label="Next">
                     <svg viewBox="0 0 24 24">
-                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
                     </svg>
                 </button>
-                <div class="carousel-track">
-                    <div class="tech-card">
+                <div class="carousel-track" style="">
+                    <div class="tech-card" style="--mouse-x: 50%; --mouse-y: 50%;">
                         <div class="tech-icon">⚡</div>
                         <h3>Tech Alpha</h3>
                         <div class="coming-soon-badge">Coming Soon</div>
                     </div>
-                    <div class="tech-card">
-                        <div class="tech-icon">🧬</div>
-                        <h3>Tech Beta</h3>
+                    <div class="tech-card" style="--mouse-x: 50%; --mouse-y: 50%;">
+                        <div class="tech-icon">🧠​</div>
+                        <h3>Mental health support protocol</h3>
                         <div class="coming-soon-badge">Coming Soon</div>
                     </div>
-                    <div class="tech-card">
+                    <div class="tech-card" style="--mouse-x: 50%; --mouse-y: 50%;">
                         <div class="tech-icon">🚀</div>
                         <h3>Tech Gamma</h3>
                         <div class="coming-soon-badge">Coming Soon</div>
                     </div>
-                    <div class="tech-card">
+                    <div class="tech-card" style="--mouse-x: 50%; --mouse-y: 50%;">
                         <div class="tech-icon">⚡</div>
-                        <h3>Tech Alpha</h3>
-                        <div class="coming-soon-badge">Coming Soon</div>
+                        <h3>Mitochondrial optimisation protocol</h3>
+                        <div class="coming-soon-badge">Buy</div>
                     </div>
-                    <div class="tech-card">
+                    <div class="tech-card" style="--mouse-x: 50%; --mouse-y: 50%;">
                         <div class="tech-icon">🧬</div>
                         <h3>Tech Beta</h3>
                         <div class="coming-soon-badge">Coming Soon</div>
                     </div>
-                    <div class="tech-card">
+                    <div class="tech-card" style="--mouse-x: 50%; --mouse-y: 50%;">
                         <div class="tech-icon">🚀</div>
                         <h3>Tech Gamma</h3>
                         <div class="coming-soon-badge">Coming Soon</div>
@@ -966,29 +1155,29 @@
                 <div class="form-group">
                     <label for="name" class="lang-fr">Nom</label>
                     <label for="name" class="lang-en">Name</label>
-                    <input type="text" id="name" name="name" required>
+                    <input type="text" id="name" name="name" required="">
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" required="">
                 </div>
                 
                 <div class="form-group">
                     <label for="current-state" class="lang-fr">État Actuel</label>
                     <label for="current-state" class="lang-en">Current State</label>
-                    <textarea id="current-state" name="current-state" rows="3" data-placeholder-fr="Ex: Fatigue chronique, problèmes de sommeil..." data-placeholder-en="Ex: Chronic fatigue, sleep problems..."></textarea>
+                    <textarea id="current-state" name="current-state" rows="3" data-placeholder-fr="Ex: Fatigue chronique, problèmes de sommeil..." data-placeholder-en="Ex: Chronic fatigue, sleep problems..." placeholder="Ex: Fatigue chronique, problèmes de sommeil..."></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="challenges" class="lang-fr">Défis Principaux</label>
                     <label for="challenges" class="lang-en">Main Challenges</label>
-                    <textarea id="challenges" name="challenges" rows="3" data-placeholder-fr="Ex: Difficultés de concentration, récupération..." data-placeholder-en="Ex: Concentration issues, recovery..."></textarea>
+                    <textarea id="challenges" name="challenges" rows="3" data-placeholder-fr="Ex: Difficultés de concentration, récupération..." data-placeholder-en="Ex: Concentration issues, recovery..." placeholder="Ex: Difficultés de concentration, récupération..."></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="goals" class="lang-fr">Vos Objectifs</label>
                     <label for="goals" class="lang-en">Your Goals</label>
-                    <textarea id="goals" name="goals" rows="3" data-placeholder-fr="Ex: Améliorer ma performance sportive..." data-placeholder-en="Ex: Improve my athletic performance..."></textarea>
+                    <textarea id="goals" name="goals" rows="3" data-placeholder-fr="Ex: Améliorer ma performance sportive..." data-placeholder-en="Ex: Improve my athletic performance..." placeholder="Ex: Améliorer ma performance sportive..."></textarea>
                 </div>
                 
                 <div class="form-group">
@@ -998,8 +1187,8 @@
                         <span class="lang-fr">💡 Budget global comprenant : le protocole personnalisé + mise en place matérielle (équipements, compléments, outils professionnels, etc.)</span>
                         <span class="lang-en">💡 Total budget including: customized protocol + hardware setup (equipment, supplements, professional tools, etc.)</span>
                     </p>
-                    <select id="budget" name="budget" required style="width: 100%; padding: 15px 20px; background: linear-gradient(135deg, rgba(0, 255, 255, 0.08), rgba(0, 255, 255, 0.05)); border: 2px solid rgba(0, 255, 255, 0.25); border-radius: 10px; color: var(--text-white); font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; transition: all 0.3s ease; cursor: pointer;">
-                        <option value="" disabled selected style="color: var(--text-gray);">
+                    <select id="budget" name="budget" required="" style="width: 100%; padding: 15px 20px; background: linear-gradient(135deg, rgba(0, 255, 255, 0.08), rgba(0, 255, 255, 0.05)); border: 2px solid rgba(0, 255, 255, 0.25); border-radius: 10px; color: var(--text-white); font-family: &#39;Rajdhani&#39;, sans-serif; font-size: 1.1rem; transition: all 0.3s ease; cursor: pointer;">
+                        <option value="" disabled="" selected="" style="color: var(--text-gray);">
                             <span class="lang-fr">-- Sélectionnez votre gamme de budget --</span>
                             <span class="lang-en">-- Select your budget range --</span>
                         </option>
@@ -1053,7 +1242,7 @@
                 <div class="form-group">
                     <label for="contact-info" class="lang-fr">Vos Coordonnées</label>
                     <label for="contact-info" class="lang-en">Your Contact Info</label>
-                    <input type="text" id="contact-info" name="contact-info" data-placeholder-fr="@username ou lien" data-placeholder-en="@username or link" required>
+                    <input type="text" id="contact-info" name="contact-info" data-placeholder-fr="@username ou lien" data-placeholder-en="@username or link" required="" placeholder="@username ou lien">
                 </div>
                 
                 <div class="form-group">
@@ -1070,7 +1259,7 @@
         </section>
 
         <footer class="footer">
-            <p>&copy; 2024 Alcibiade Protocol. All rights reserved.</p>
+            <p>© 2024 Alcibiade Protocol. All rights reserved.</p>
         </footer>
     </div>
 
@@ -1339,5 +1528,26 @@
             });
         });
     </script>
-</body>
-</html>
+
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"><template shadowrootmode="open"><style>
+      div.grammarly-desktop-integration {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select:none;
+        user-select:none;
+      }
+
+      div.grammarly-desktop-integration:before {
+        content: attr(data-content);
+      }
+    </style><div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;full&quot;,&quot;isActive&quot;:true,&quot;isUserDisabled&quot;:false}"></div></template></grammarly-desktop-integration></html>
